@@ -23,8 +23,8 @@
   "dependencies": {
     "async": "^1.4.2",
     "colors": "^1.1.2",
-    "phantom": "^0.7.2",
-    "phantomjs": "^1.9.18",
-    "simplecrawler": "^0.5.3"
+    "phantom": "^2.0.4",
+    "phantomjs-prebuilt": "^2.1.5",
+    "simplecrawler": "^0.6.2"
   }
 }
