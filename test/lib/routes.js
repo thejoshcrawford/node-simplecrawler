@@ -1,7 +1,8 @@
 // Routes for testing server
 
 var fs = require("fs"),
-    path = require("path");
+    path = require("path"),
+    zlib = require("zlib");
 
 var getFixtureFile = function (filename) {
     return fs.readFileSync(path.join(__dirname, "..", "fixtures", filename));
@@ -42,6 +43,14 @@ module.exports = {
 
     "/stage6": function(write) {
         write(200, "Crawl complete!");
+    },
+
+    "/cookie": function(write) {
+        var expires = new Date();
+        expires.setHours(expires.getHours() + 10);
+        var cookie = "thing=stuff; expires=" + expires + "; path=/; domain=.localhost";
+
+        write(200, "<a href='/stage6'>Link</a>", { "Set-Cookie": cookie });
     },
 
     "/async-stage1": function(write) {
@@ -151,6 +160,24 @@ module.exports = {
 
     "/encoded/empty": function(write) {
         write(200, "");
+    },
+
+    "/compressed/link": function(write) {
+        zlib.gzip("<a href='/compressed/gzip'>Go to gzip</a>", function(error, result) {
+            write(200, result, { "Content-Encoding": "gzip" });
+        });
+    },
+
+    "/compressed/gzip": function(write) {
+        zlib.gzip("Yay, you know how to deal with gzip compression!", function(error, result) {
+            write(200, result, { "Content-Encoding": "gzip" });
+        });
+    },
+
+    "/compressed/deflate": function(write) {
+        zlib.deflate("Yay, you know how to deal with deflate compression!", function(error, result) {
+            write(200, result, { "Content-Encoding": "deflate" });
+        });
     },
 
     "/big": function(write) {
